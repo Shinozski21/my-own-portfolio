@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Home page</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+
+  <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
+
+      <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
+
+        <img src="/static/images/shin-kanji.gif" height="32" width="40">
+        <span class="fs-4">SHINnovation</span>
+      </a>
+
+      <ul class="nav nav-pills">
+        <li class="nav-item"><a href="{{url_for('home')}}" class="nav-link active" aria-current="page">Home</a></li>
+        <li class="nav-item"><a href="{{url_for('about')}}" class="nav-link">About</a></li>
+        <li class="nav-item"><a href="{{url_for('resume')}}" class="nav-link">Resume</a></li>
+        <li class="nav-item"><a href="{{url_for('portfolio')}}" class="nav-link">Portfolio</a></li>
+        <li class="nav-item"><a href="{{url_for('blog')}}" class="nav-link">Blog</a></li>
+        <li class="nav-item"><a href="{{url_for('contact')}}" class="nav-link">Contact</a></li>
+      </ul>
+    </header>
+
+
+
+
+
+    <div id="myCarousel" class="carousel slide mb-6" data-bs-ride="carousel">
+      <div class="carousel-indicators">
+        <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="0" class="" aria-label="Slide 1"></button>
+        <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="1" aria-label="Slide 2" class="active" aria-current="true"></button>
+        <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="2" aria-label="Slide 3" class=""></button>
+      </div>
+      <div class="carousel-inner">
+        <div class="carousel-item">
+          <img src="/static/images/front-end.jpg" width=100% height=400px>
+          <div class="container">
+            <div class="carousel-caption text-start">
+              <h1>Front End</h1>
+              <p class="opacity-75">Creates websites and applications using web languages such as HTML, CSS, and JavaScript that allow users to access and interact with the site or app.</p>
+
+            </div>
+          </div>
+        </div>
+        <div class="carousel-item active">
+          <img src="/static/images/cloud.jpg" width=100% height=400px>
+          <div class="container">
+            <div class="carousel-caption">
+              <h1>Cloud Engineer</h1>
+              <p>identifies and integrates public and private cloud computing services and solutions that help organizations operate with greater efficiency, security, and attention to detail.</p>
+
+            </div>
+          </div>
+        </div>
+        <div class="carousel-item">
+          <img src="/static/images/back-end.jpg" width=100% height=400px>
+          <div class="container">
+            <div class="carousel-caption text-end">
+              <h1>Back End</h1>
+              <p>The experts who build and maintain the mechanisms that process data and perform actions on websites.</p>
+
+            </div>
+          </div>
+        </div>
+      </div>
+      <button class="carousel-control-prev" type="button" data-bs-target="#myCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#myCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+      </button>
+    </div>
+
+
+
+
+
+
+
+
+</head>
+<body>
+
+<div class="album py-5 bg-light">
+    <div class="container">
+
+      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+
+
+
+
+        <div class="col">
+          <div class="card shadow-sm">
+            <img src="/static/images/Python.svg.png" alt="python" width=100% height="225">
+
+            <div class="card-body">
+              <h3>Python</h3>
+              <p class="card-text">It is used for web development (server-side), software development, mathematics and system scripting.</p>
+              <div class="d-flex justify-content-between align-items-center">
+                <div class="btn-group">
+                  <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="card shadow-sm">
+            <img src="/static/images/figma-logo.png" alt="figma" width=100% height="225">
+
+            <div class="card-body">
+              <h3>Figma</h3>
+              <p class="card-text">A browser-based web design tool that lets teams of users collaborate on projects to build interactive user interface prototypes.</p>
+              <div class="d-flex justify-content-between align-items-center">
+                <div class="btn-group">
+                  <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="card shadow-sm">
+            <img src="/static/images/javascript_logo.png" alt="java script" width=100% height="225">
+
+            <div class="card-body">
+              <h3>JavaScript</h3>
+              <p class="card-text">s a programming language that is one of the core technologies of the World Wide Web, alongside HTML and CSS. </p>
+              <div class="d-flex justify-content-between align-items-center">
+                <div class="btn-group">
+                  <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
+
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col">
+          <div class="card shadow-sm">
+            <img src="/static/images/pandas_logo.svg.png" alt="pandas library" width=100% height="225">
+            <div class="card-body">
+              <h3>Pandas</h3>
+              <p class="card-text">It is a fast, powerful, flexible and easy to use open source data analysis and manipulation tool, built on top of the Python programming language.</p>
+              <div class="d-flex justify-content-between align-items-center">
+                <div class="btn-group">
+                  <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="card shadow-sm">
+            <img src="/static/images/beautiful-soup.jpeg" alt="beautiful soup" width=100% height="225">
+
+            <div class="card-body">
+              <h3>Beautiful Soup</h3>
+              <p class="card-text">Ta Python library for pulling data out of HTML and XML files. It provides idiomatic ways of navigating, searching, and modifying the parse tree.</p>
+              <div class="d-flex justify-content-between align-items-center">
+                <div class="btn-group">
+                  <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="card shadow-sm">
+            <img src="/static/images/MySQL.png" alt="MySQL" width=100% height="225">
+
+            <div class="card-body">
+               <h3>MySQL</h3>
+              <p class="card-text">It is an open source SQL relational database management system. A database is just a structured collection of data that’s organized for easy use and retrieval. </p>
+              <div class="d-flex justify-content-between align-items-center">
+                <div class="btn-group">
+                  <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+
+         <div class="col">
+          <div class="card shadow-sm">
+            <img src="/static/images/turtle-python.jpg" alt="tutle used application" width=100% height="225">
+
+
+              <div class="card-body">
+                <h3>Turtle application</h3>
+                  <p class="card-text">It’s an effective and well-proven way for learners to encounter programming concepts and interaction with software, as it provides instant, visible feedback. </p>
+              <div class="d-flex justify-content-between align-items-center">
+                <div class="btn-group">
+                  <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="card shadow-sm">
+            <img src="/static/images/pomodoro.png" alt="turtle used application" width=100% height="225">
+
+            <div class="card-body">
+              <h3>Tkinter application</h3>
+              <p class="card-text">It is the standard Python interface to the Tcl/Tk GUI toolkit. Both Tk and tkinter are available on most Unix platforms, including macOS, as well as on Windows systems.</p>
+              <div class="d-flex justify-content-between align-items-center">
+                <div class="btn-group">
+                  <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="card shadow-sm">
+            <img src="/static/images/data-analysis.jpg" alt="data analysis" width=100% height="225">
+
+            <div class="card-body">
+              <h3>Data Analysis</h3>
+              <p class="card-text">Process of inspecting, cleansing, transforming, and modeling data with the goal of discovering useful information, informing conclusions, and supporting decision-making.</p>
+              <div class="d-flex justify-content-between align-items-center">
+                <div class="btn-group">
+                  <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+<footer class="py-3 my-4">
+    <ul class="nav justify-content-center border-bottom pb-3 mb-3">
+      <li class="nav-item"><a href="{{url_for('home')}}" class="nav-link px-2 text-body-secondary">Home</a></li>
+      <li class="nav-item"><a href="{{url_for('about')}}" class="nav-link px-2 text-body-secondary">About</a></li>
+      <li class="nav-item"><a href="{{url_for('resume')}}"  class="nav-link px-2 text-body-secondary">Resume</a></li>
+      <li class="nav-item"><a href="{{url_for('portfolio')}}" class="nav-link px-2 text-body-secondary">Portfolio</a></li>
+      <li class="nav-item"><a href="{{url_for('blog')}}" class="nav-link px-2 text-body-secondary">Blog</a></li>
+      <li class="nav-item"><a href="{{url_for('contact')}}" class="nav-link px-2 text-body-secondary">Contact</a>
+    </ul>
+    <p class="text-center text-body-secondary">© 2023 Shin Orbeta</p>
+  </footer>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+</body>
+</html>

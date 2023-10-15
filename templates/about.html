@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>About</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+
+	  <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
+
+		  <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
+
+			  <img src="/static/images/shin-kanji.gif" height="32" width="40">
+			<span class="fs-4">SHINnovation</span>
+
+
+
+		  <ul class="nav nav-pills">
+			<li class="nav-item"><a href="{{url_for('home')}}" class="nav-link " aria-current="page">Home</a></li>
+			<li class="nav-item"><a href="{{url_for('about')}}" class="nav-link active">About</a></li>
+			<li class="nav-item"><a href="{{url_for('resume')}}" class="nav-link">Resume</a></li>
+			<li class="nav-item"><a href="{{url_for('portfolio')}}" class="nav-link">Portfolio</a></li>
+			<li class="nav-item"><a href="{{url_for('blog')}}" class="nav-link">Blog</a></li>
+			<li class="nav-item"><a href="{{url_for('contact')}}" class="nav-link">Contact</a></li>
+		  </ul>
+
+
+		  </a>
+	  </header>
+</head>
+<body>
+
+
+  <div class="container marketing">
+	<div class="row featurette">
+		  <div class="col-md-7">
+			<h2 class="featurette-heading">Basketball <span class="text-muted">It’ll blow your mind.</span></h2>
+			<p class="lead">I like playing basketball, jogging, doing some excercise.</p>
+		  </div>
+		  <div class="col-md-5">
+			<img src="/static//images/basketball.jpg" alt="basketball" width="400" height="400">
+		  </div>
+		</div>
+		<hr class="featurette-divider">
+	<div class="row featurette">
+		  <div class="col-md-7 order-md-2">
+			<h2 class="featurette-heading">Enjoying free time <span class="text-muted">for family.</span></h2>
+			<p class="lead">spending time with my family, friends and love ones.</p>
+		  </div>
+		  <div class="col-md-5 order-md-1">
+			<img src="/static//images/withsese.PNG" alt="me and sese" width="300" height="500">
+
+		  	</div>
+			</div>
+			<hr class="featurette-divider">
+			<div class="row featurette">
+			  <div class="col-md-7">
+				<h2 class="featurette-heading">Determination <span class="text-muted">Innovation</span></h2>
+				<p class="lead"> Never ending learning and pursuing dreams.</p>
+			  </div>
+			  <div class="col-md-5">
+				<img src="/static/images/Japanese Diploma.jpg" alt="Japanese diploma" width="400" height="400">
+			  </div>
+		</div>
+
+
+
+	<footer class="py-3 my-4">
+		<ul class="nav justify-content-center border-bottom pb-3 mb-3">
+		  <li class="nav-item"><a href="{{url_for('home')}}" class="nav-link px-2 text-body-secondary">Home</a></li>
+		  <li class="nav-item"><a href="{{url_for('about')}}" class="nav-link px-2 text-body-secondary">About</a></li>
+		  <li class="nav-item"><a href="{{url_for('resume')}}"  class="nav-link px-2 text-body-secondary">Resume</a></li>
+		  <li class="nav-item"><a href="{{url_for('portfolio')}}" class="nav-link px-2 text-body-secondary">Portfolio</a></li>
+		  <li class="nav-item"><a href="{{url_for('blog')}}" class="nav-link px-2 text-body-secondary">Blog</a></li>
+		  <li class="nav-item"><a href="{{url_for('contact')}}" class="nav-link px-2 text-body-secondary">Contact</a>
+		</ul>
+		<p class="text-center text-body-secondary">© 2023 Shin Orbeta</p>
+	  </footer>
+
+	</body>
+
+</html>
