@@ -5,22 +5,12 @@ import pandas as pd
 
 app = Flask(__name__)
 
-app.secret_key = 'shin'
-my_gmail = "shinozski@gmail.com"
-gmail_pass = "ixnkexhjukqnbxpo"
 
-mail = Mail()
-app.config["MAIL_SERVER"] = "smtp.gmail.com"
-app.config["MAIL_PORT"] = 465
-app.config["MAIL_USE_SSL"] = True
-app.config["MAIL_USERNAME"] = my_gmail
-app.config["MAIL_PASSWORD"] = gmail_pass
-mail.init_app(app)
 
 
 @app.route("/")
 def home():
-    return render_template("home.html")
+    return render_template("index.html")
     debug = True
 
 
