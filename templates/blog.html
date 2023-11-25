@@ -1,26 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Shin's blog</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+{%  extends "base.html" %}
+
+{% block content %}
 
 	<link rel="stylesheet" href="/static/css/main.css" />
-
-
-
-	  <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
-
-		  <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
-
-			<img src="/static/images/shin-kanji.gif" height="32" width="40">
-			<span class="fs-4">SHINnovation</span>
-
-			  <style>
+	<style>
 				  li.nav-item, .d-flex{
 				      display:block;margin:var(--bs-tooltip-margin);
 				      font-family:var(--bs-font-sans-serif);
 				      font-style:normal;font-weight:400;
+
 				      line-height:1.5;text-align:left;
 				      text-align:start;
 				      text-decoration:none;
@@ -38,21 +26,11 @@
 
 
 			  </style>
-		  </a>
 
-		  <ul class="nav nav-pills">
-			<li class="nav-item"><a href="{{url_for('home')}}" class="nav-link " aria-current="page">Home</a></li>
-			<li class="nav-item"><a href="{{url_for('about')}}" class="nav-link">About</a></li>
-			<li class="nav-item"><a href="{{url_for('resume')}}" class="nav-link">Resume</a></li>
-			<li class="nav-item"><a href="{{url_for('portfolio')}}" class="nav-link">Portfolio</a></li>
-			<li class="nav-item"><a href="{{url_for('blog')}}" class="nav-link active">Blog</a></li>
-			<li class="nav-item"><a href="{{url_for('contact')}}" class="nav-link">Contact</a></li>
-		  </ul>
-	  </header>
 
-</head>
 
-	<body class="is-preload">
+
+		  <div class="is-preload">
 		<div class="container marketing">
 
 		<!-- Wrapper -->
@@ -113,29 +91,8 @@
 							<img src="/static/images/summer.jpg" alt="summer" />
 						</div>
 					</section>
-
-
-
-
-
-
 			</div>
 		</div>
 
-		<!-- Scripts -->
-
-
-			<footer class="py-3 my-4">
-		<ul class="nav justify-content-center border-bottom pb-3 mb-3">
-		  <li class="nav-item"><a href="{{url_for('home')}}" class="nav-link px-2 text-body-secondary">Home</a></li>
-		  <li class="nav-item"><a href="{{url_for('about')}}" class="nav-link px-2 text-body-secondary">About</a></li>
-		  <li class="nav-item"><a href="{{url_for('resume')}}"  class="nav-link px-2 text-body-secondary">Resume</a></li>
-		  <li class="nav-item"><a href="{{url_for('portfolio')}}" class="nav-link px-2 text-body-secondary">Portfolio</a></li>
-		  <li class="nav-item"><a href="{{url_for('blog')}}" class="nav-link px-2 text-body-secondary">Blog</a></li>
-		  <li class="nav-item"><a href="{{url_for('contact')}}" class="nav-link px-2 text-body-secondary">Contact</a>
-		</ul>
-			<p class="text-center text-body-secondary">© 2023 Shin Orbeta | HTML5 </p>
-	  </footer>
-
-	</body>
-</html>
+	</div>
+{% endblock%}
