@@ -2,21 +2,23 @@ from flask import Flask, render_template, request, flash
 from forms import ContactForm
 from flask_mail import Mail, Message
 import pandas as pd
+import datetime
 
 app = Flask(__name__)
 
-
+current_year = datetime.datetime.now().year
 
 
 @app.route("/")
 def home():
-    return render_template("index.html")
+
+    return render_template("index.html", year=current_year)
     debug = True
 
 
 @app.route('/contact', methods=['GET', 'POST'])
 def contact():
-    return render_template("contact.html")
+    return render_template("contact.html", year=current_year)
 
   #   if request.method == 'POST':
   #       if form.validate() == False:
@@ -40,23 +42,23 @@ form = ContactForm()
 
 @app.route("/resume")
 def resume():
-    return render_template("resume.html")
+    return render_template("resume.html", year=current_year)
 
 
 @app.route("/blog")
 def blog():
-    return render_template("blog.html")
+    return render_template("blog.html", year=current_year)
 
 
 
 @app.route("/about")
 def about():
-    return render_template("about.html")
+    return render_template("about.html", year=current_year)
 
 
 @app.route("/portfolio")
 def portfolio():
-    return render_template("portfolio.html")
+    return render_template("portfolio.html", year=current_year)
 
 
 if __name__ == '__main__':
