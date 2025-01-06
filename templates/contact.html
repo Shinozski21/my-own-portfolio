@@ -40,6 +40,16 @@
         margin: 0 auto;
         }
 
+        .email-link {
+        text-decoration: none;  /* Remove the underline */
+        color: inherit;         /* Inherit the text color from the parent (if needed) */
+        }
+
+        .email-link:hover {
+            color: blue;            /* Change the color to blue when hovered */
+            text-decoration: none;  /* Ensure there's no underline on hover */
+        }
+
 
 
   </style>
@@ -55,7 +65,8 @@
              <img src ="/static/images/linkedin.svg" width="60%" class="img_icon">
             </div>
             <h6>linkedin</h6>
-              <h5 >teghieorbeta@yahoo.com</h5>
+              <h5><a href="https://www.linkedin.com/in/teddy-gil-orbeta-664022106/" target="_blank" class="email-link">teghieorbeta@yahoo.com</a></h5>
+
 
             </a>
           </div>
@@ -64,17 +75,19 @@
                  <img src ="/static/images/github.svg" width="60%" class="img_icon">
             </div>
             <h6>Github</h6>
-                <h5 >Shinozski21</h5>
+                <h5><a href="https://github.com/Shinozski21/" target="_blank" class="email-link">Shinozski21</a></h5>
+                <h5><a href="https://github.com/T-Orbeta-Shin" target="_blank" class="email-link">T-Orbeta-Shin</a></h5>
           </div>
           <div class="feature col">
             <div class="feature-icon d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-2 mb-3">
      <img src ="/static/images/envelope-at.svg" width="60%" class="img_icon">        </div>
             <h6>Mail</h6>
-              <h5>shinorbeta@gmail.com</h5>
+              <h5>shinorbeta21@gmail.com</h5>
               <h5>teghieorbeta@yahoo.com</h5>
             </a>
           </div>
         </div>
-      </div>
+    </div>
+</div>
 
 {% endblock%}
