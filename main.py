@@ -4,6 +4,7 @@ from flask_mail import Mail, Message
 import pandas as pd
 import datetime
 
+
 app = Flask(__name__)
 
 current_year = datetime.datetime.now().year
