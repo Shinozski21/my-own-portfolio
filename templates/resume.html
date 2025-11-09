@@ -1,9 +1,156 @@
-{%  extends "base.html" %}
-
-{% block content %}
-
+{% extends "base.html" %} {% block content %}
 <div class="container marketing">
-<img src="../static/images/resume.JPG" height="100%" width="100%"/>
+  <!-- Language Buttons -->
+  <div
+    class="text-center mb-4"
+    id="lang-buttons"
+    role="group"
+    aria-label="Language switch"
+  >
+    <button
+      type="button"
+      class="btn btn-primary active"
+      data-lang="en"
+      aria-pressed="true"
+    >
+      English
+    </button>
+    <button
+      type="button"
+      class="btn btn-outline-secondary"
+      data-lang="jp"
+      aria-pressed="false"
+    >
+      日本語
+    </button>
+  </div>
+
+  <!-- PDF Viewer Container (we rebuild content inside here) -->
+  <div id="pdf-container" class="w-100"></div>
+
+  <!-- Download Buttons Container (rebuilt per language) -->
+  <div id="download-container" class="text-center mt-4 mb-5"></div>
 </div>
 
-{% endblock%}
+<!-- JavaScript: robust PDF swap (rebuild nodes + cache-busting) -->
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    // Resolved URLs from Flask (no tuples — use arrays)
+    const pdfs = {
+      en: [
+        "{{ url_for('static', filename='pdfs/Teddy-Orbeta-CV-11-2025.pdf') }}",
+      ],
+      jp: [
+        "{{ url_for('static', filename='pdfs/履歴書_Orbeta_2025_11.pdf') }}",
+        "{{ url_for('static', filename='pdfs/職務経歴書_Orbeta_2025_11.pdf') }}",
+      ],
+    };
+
+    const titles = {
+      en: ["Curriculum Vitae"],
+      jp: ["履歴書", "職務経歴書"],
+    };
+
+    const group = document.getElementById("lang-buttons");
+    const buttons = group.querySelectorAll("button[data-lang]");
+    const container = document.getElementById("pdf-container");
+    const downloadContainer = document.getElementById("download-container");
+
+    // Add a tiny cache-buster to force refresh without breaking the raw download link
+    function withBust(url) {
+      const sep = url.includes("?") ? "&" : "?";
+      return url + sep + "v=" + Date.now();
+    }
+
+    // Build a single PDF block (<h5> + <object>)
+    function buildPdfBlock(title, url) {
+      const wrapper = document.createElement("div");
+      wrapper.className = "mb-4";
+
+      if (title) {
+        const h = document.createElement("h5");
+        h.className = "mb-3";
+        h.textContent = title;
+        wrapper.appendChild(h);
+      }
+
+      const obj = document.createElement("object");
+      obj.type = "application/pdf";
+      obj.width = "100%";
+      obj.height = "800px";
+      obj.data = withBust(url) + "#view=FitH";
+
+      const p = document.createElement("p");
+      p.innerHTML =
+        'PDF preview failed to load. You can <a href="' +
+        url +
+        '" target="_blank" rel="noopener">open or download it here</a>.';
+      obj.appendChild(p);
+
+      wrapper.appendChild(obj);
+      return wrapper;
+    }
+
+    // Render one or more PDFs
+    function renderPdfs(lang) {
+      container.innerHTML = "";
+      const list = pdfs[lang];
+      const nameList = titles[lang] || [];
+
+      list.forEach((url, i) => {
+        container.appendChild(buildPdfBlock(nameList[i] || "", url));
+      });
+    }
+
+    // Render download buttons (one for EN, two for JP)
+    function renderDownloadButtons(lang) {
+      downloadContainer.innerHTML = "";
+      const list = pdfs[lang];
+      const nameList = titles[lang] || [];
+
+      list.forEach((url, i) => {
+        const a = document.createElement("a");
+        a.href = url; // keep clean (no cache-buster)
+        a.download = ""; // let browser use filename
+        a.className = "btn btn-success mx-2 my-1";
+        a.textContent = "📥 " + (nameList[i] ? nameList[i] : "Download PDF");
+        downloadContainer.appendChild(a);
+      });
+    }
+
+    function setActive(lang) {
+      // Toggle button styles
+      buttons.forEach((btn) => {
+        const isActive = btn.getAttribute("data-lang") === lang;
+        btn.classList.remove(
+          "btn-primary",
+          "btn-secondary",
+          "btn-outline-secondary",
+          "active"
+        );
+        if (isActive) {
+          btn.classList.add("btn", "btn-primary", "active");
+          btn.setAttribute("aria-pressed", "true");
+        } else {
+          btn.classList.add("btn", "btn-outline-secondary");
+          btn.setAttribute("aria-pressed", "false");
+        }
+      });
+
+      // Render viewers + downloads
+      renderPdfs(lang);
+      renderDownloadButtons(lang);
+    }
+
+    // Wire clicks
+    buttons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        setActive(btn.getAttribute("data-lang"));
+      });
+    });
+
+    // Initial render (defaults to English)
+    setActive("en");
+  });
+</script>
+{% endblock %}

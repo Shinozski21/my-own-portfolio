@@ -1,80 +1,129 @@
-{%  extends "base.html" %}
+{% extends "base.html" %} {% block content %}
+<style>
+  .feature-icon {
+    width: 4rem;
+    height: 4rem;
+    border-radius: 0.75rem;
+  }
 
-{% block content %}
-    <style>
+  .icon-square {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 0.75rem;
+  }
 
-        .feature-icon {
-          width: 4rem;
-          height: 4rem;
-          border-radius: .75rem;
-        }
+  .text-shadow-1 {
+    text-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.25);
+  }
+  .text-shadow-2 {
+    text-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.25);
+  }
+  .text-shadow-3 {
+    text-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.25);
+  }
 
-        .icon-square {
-          width: 3rem;
-          height: 3rem;
-          border-radius: .75rem;
-        }
+  .feature-icon-small {
+    width: 3rem;
+    height: 3rem;
+  }
 
-        .text-shadow-1 { text-shadow: 0 .125rem .25rem rgba(0, 0, 0, .25); }
-        .text-shadow-2 { text-shadow: 0 .25rem .5rem rgba(0, 0, 0, .25); }
-        .text-shadow-3 { text-shadow: 0 .5rem 1.5rem rgba(0, 0, 0, .25); }
+  .img_icon {
+    filter: invert(100%);
+    display: flex;
+    margin: 0 auto;
+    text-align: center;
+    float: right;
+  }
 
+  h6 {
+    display: block;
+    margin: 0 auto;
+  }
 
+  .contact-link {
+    color: #0d6efd;
+    text-decoration: none;
+    font-weight: 600;
+    display: inline-block;
+  }
 
-        .feature-icon-small {
-          width: 3rem;
-          height: 3rem;
-        }
+  .contact-link:hover {
+    text-decoration: underline;
+  }
 
-        .img_icon{
+  .contact-link-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-start;
+  }
+</style>
 
-        filter: invert(100%);
-         display: flex;
-         margin: 0 auto;
-         text-align: center;
-         float: right;
-
-        }
-        h6 {
-        display: block;
-        margin: 0 auto;
-        }
-
-
-
-  </style>
-
-
-
-<div class="container marketing" style="margin-top: 120px;">
-    <div class="container px-4 py-5" id="featured-3">
-        <h2 class="pb-2 border-bottom">Contact</h2>
-        <div class="row g-4 py-5 row-cols-1 row-cols-lg-3">
-          <div class="feature col">
-            <div class="feature-icon d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-2 mb-3">
-             <img src ="/static/images/linkedin.svg" width="60%" class="img_icon">
-            </div>
-            <h6>linkedin</h6>
-              <h5 >teghieorbeta@yahoo.com</h5>
-
-            </a>
-          </div>
-          <div class="feature col">
-            <div class="feature-icon d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-2 mb-3">
-                 <img src ="/static/images/github.svg" width="60%" class="img_icon">
-            </div>
-            <h6>Github</h6>
-                <h5 >Shinozski21</h5>
-          </div>
-          <div class="feature col">
-            <div class="feature-icon d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-2 mb-3">
-     <img src ="/static/images/envelope-at.svg" width="60%" class="img_icon">        </div>
-            <h6>Mail</h6>
-              <h5>shinorbeta@gmail.com</h5>
-              <h5>teghieorbeta@yahoo.com</h5>
-            </a>
-          </div>
+<div class="container marketing" style="margin-top: 120px">
+  <div class="container px-4 py-5" id="featured-3">
+    <h2 class="pb-2 border-bottom">Contact</h2>
+    <div class="row g-4 py-5 row-cols-1 row-cols-lg-3">
+      <div class="feature col">
+        <div
+          class="feature-icon d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-2 mb-3"
+        >
+          <img src="/static/images/linkedin.svg" width="60%" class="img_icon" />
+        </div>
+        <h6>LinkedIn</h6>
+        <a
+          class="contact-link"
+          href="https://www.linkedin.com/in/teddy-gil-orbeta-664022106/"
+          target="_blank"
+          rel="noopener noreferrer"
+          >Teddy Gil Orbeta</a
+        >
+      </div>
+      <div class="feature col">
+        <div
+          class="feature-icon d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-2 mb-3"
+        >
+          <img src="/static/images/github.svg" width="60%" class="img_icon" />
+        </div>
+        <h6>GitHub</h6>
+        <a
+          class="contact-link"
+          href="https://github.com/Shinozski21"
+          target="_blank"
+          rel="noopener noreferrer"
+          >Shinozski21</a
+        >
+      </div>
+      <div class="feature col">
+        <div
+          class="feature-icon d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-2 mb-3"
+        >
+          <img
+            src="/static/images/envelope-at.svg"
+            width="60%"
+            class="img_icon"
+          />
+        </div>
+        <h6>Mail</h6>
+        <div class="contact-link-group">
+          <a
+            class="contact-link"
+            href="https://mail.google.com/mail/?view=cm&fs=1&to=teghieorbeta@yahoo.com&su=We%20want%20to%20connect%20with%20you."
+            target="_blank"
+            rel="noopener noreferrer"
+            >Compose in Gmail</a
+          >
+          <a
+            class="contact-link"
+            href="https://outlook.live.com/owa/?path=/mail/action/compose&to=teghieorbeta@yahoo.com&subject=We%20want%20to%20connect%20with%20you."
+            target="_blank"
+            rel="noopener noreferrer"
+            >Compose in Outlook</a
+          >
+          <span>teghieorbeta@yahoo.com</span>
         </div>
       </div>
+    </div>
+  </div>
 
-{% endblock%}
+  {% endblock%}
+</div>

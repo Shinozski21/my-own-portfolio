@@ -43,6 +43,10 @@ form = ContactForm()
 def resume():
     return render_template("resume.html")
 
+@app.route("/certifications")
+def certifications():
+    return render_template("certifications.html")
+
 
 @app.route("/blog")
 def blog():

@@ -1,0 +1,79 @@
+/* Reusable layout styles for the blog page */
+.blog-page {
+  background-color: #ffffff;
+}
+
+.blog-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+.feature-list {
+  display: flex;
+  flex-direction: column;
+  gap: 60px;
+}
+
+.feature {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+}
+
+.feature--right {
+  flex-direction: row-reverse;
+}
+
+.feature__content {
+  flex: 1 1 0;
+}
+
+.feature__image {
+  flex: 0 0 auto;
+}
+
+.feature__image img {
+  width: 100%;
+  max-width: 420px;
+  border-radius: 10px;
+  display: block;
+}
+
+.feature__actions {
+  margin-top: 24px;
+}
+
+.feature__button {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #0070f3;
+  color: #ffffff;
+  border-radius: 6px;
+  text-decoration: none;
+  transition: background-color 0.2s ease;
+}
+
+.feature__button:hover {
+  background-color: #0055bb;
+}
+
+@media (max-width: 768px) {
+  .feature {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .feature__image {
+    width: 100%;
+  }
+
+  .feature__image img {
+    max-width: 100%;
+  }
+
+  .feature__actions {
+    display: flex;
+    justify-content: center;
+  }
+}

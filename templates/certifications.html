@@ -1,0 +1,82 @@
+{% extends "base.html" %} {% block content %}
+
+<div class="container py-5">
+  <h2 class="text-center mb-5">My Certifications</h2>
+
+  <div class="row justify-content-center">
+    <!-- Card 1 -->
+    <div class="col-md-4 mb-4">
+      <div class="card shadow-sm h-100">
+        <img
+          src="{{ url_for('static', filename='certs/aws_saa.png') }}"
+          class="card-img-top"
+          alt="AWS Solutions Architect Associate"
+        />
+        <div class="card-body text-center">
+          <h5 class="card-title">
+            AWS Certified Solutions Architect – Associate
+          </h5>
+          <p class="card-text text-muted small">
+            Passed in 2025. Focused on designing scalable, cost-optimized
+            architectures.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 2 -->
+    <div class="col-md-4 mb-4">
+      <div class="card shadow-sm h-100">
+        <img
+          src="{{ url_for('static', filename='certs/aws_cloud_practitioner.png') }}"
+          class="card-img-top"
+          alt="AWS Cloud Practitioner"
+        />
+        <div class="card-body text-center">
+          <h5 class="card-title">AWS Certified Cloud Practitioner</h5>
+          <p class="card-text text-muted small">
+            Fundamental certification covering the AWS cloud and global
+            infrastructure.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 3 -->
+    <div class="col-md-4 mb-4">
+      <div class="card shadow-sm h-100">
+        <img
+          src="{{ url_for('static', filename='certs/JLPTN2.png') }}"
+          class="card-img-top"
+          alt="AWS Solutions Architect Professional"
+        />
+        <div class="card-body text-center">
+          <h5 class="card-title">JLPT</h5>
+          <p class="card-text text-muted small">
+            N2 certification achieved in 2025. Proficient in reading and
+            understanding complex Japanese texts.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4 mb-4">
+      <div class="card shadow-sm h-100">
+        <img
+          src="{{ url_for('static', filename='certs/JLPTN3.png') }}"
+          class="card-img-top"
+          alt="AWS Solutions Architect Professional"
+        />
+        <div class="card-body text-center">
+          <h5 class="card-title">JLPT N3</h5>
+          <p class="card-text text-muted small">
+            N3 certification achieved in 2021. Capable of understanding everyday
+            Japanese used in various situations.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
