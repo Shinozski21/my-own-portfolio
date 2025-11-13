@@ -1,0 +1,614 @@
+Skip to content
+envato-tuts+
+envato-tuts+ Code Python
+Intro to Flask: Adding a Contact Page
+Lalith Polepeddi
+Last updated Jan 22, 2023
+ 23 min
+
+English
+In the previous article in this mini-series, we used Flask to build a simple website that contains "Home" and "About" pages using a generalized workflow that we can apply to other Flask-based web apps. In this lesson, I'll demonstrate how to add a Contact page that allows users to send you messages.
+
+
+An Introduction to Python’s Flask Framework
+Lalith Polepeddi
+21 Jan 2023
+The code used in this article can be found on GitHub.
+
+Flask Extensions
+Flask doesn't come with many features off the shelf, making it easy to pick up and learn. There is no object-relational mapper for database interaction or admin interfaces to add and update content. It only offers a small set of functions, two of which we've already used—url_for() and render_template().
+
+Instead of shipping with extra functionality, Flask's extension model allows you to add functionality as needed. A Flask extension is a package that adds specific functionality to your app. For example, Flask-SQLAlchemy adds database support to your app, whereas Flask-Login adds login/logout support. You can find a full list of extensions in the Flask Extension Registry.
+
+To create a contact page, we'll use Flask-WTF to handle and validate form data and Flask-Mail to email the form data to you.
+
+Flask-WTF
+Flask-WTF is an extension that handles and validates form data. What does that mean? Look at the following diagram:
+
+A user issues a GET request for a web page that contains a form.
+The user fills in the form.
+The user clicks the Send button, submitting it to the server via a POST request.
+The server validates the information.
+If one or more fields do not validate, the web page containing the form loads again with a helpful error message, prompting the user to try again.
+If all fields validate, the form information is used in the next step in the pipeline.
+A contact page will have fields for the user's name, email, subject, and message. In Flask, we'll POST the form to a function inside routes.py. This function is called the form handler. We'll run a few validation checks, and if any of the input does not pass muster, we'll refresh the page to display a message that describes the error. Once all validation checks pass, we'll use the form data for the next step: emailing the message to you, the website owner.
+
+That's how form handling and validation work. Now where do we actually define the form? We could write HTML using the <form> element and set its action attribute to a Python script. The Python script would mirror the form in order to capture each form field and validate the form field data. If we use this strategy, however, we'd essentially define the form twice—once for the front-end and once for the back-end.
+
+It would be great to define the form only once: in the Python script. This is exactly what Flask-WTF allows us to do. We'll define the form just once in a Python script, and then we'll let Flask-WTF generate the form's HTML for us. The point of all of this is to separate presentation from content.
+
+Enough chatter. Let's code.
+
+Advertisement
+Creating a Form
+As a first step, let's get back into the isolated development environment we created last time.
+
+$ cd flaskapp
+$ . bin/activate
+
+Now that we've entered and activated our development environment, we can safely install Flask-WTF:
+
+pip install -U Flask-WTF
+Let's now define the form in a Python script. We already have routes.py, which maps URLs to functions. Let's not clutter it with unrelated code. Instead, create a new file called forms.py, and place it inside the app/ folder.
+
+app/forms.py
+
+from flask_wtf import FlaskForm
+from wtforms import StringField, TextAreaField, SubmitField
+class ContactForm(FlaskForm):
+  name = StringField("Name")
+  email = StringField("Email")
+  subject = StringField("Subject")
+  message = TextAreaField("Message")
+  submit = SubmitField("Send")
+
+We just created a form. What did we do? First, we imported a few useful classes from the Flask-WTF FlaskForm class, a text field, a textarea field for multi-line text input, and a submit button. Next, we created a new class named ContactForm, inheriting from the  FlaskForm class. Then, we created each field that we want to see in the contact form. Instead of writing <input type="text">Name</input> in an HTML file, you write name = StringField("Name").
+
+Using the Form
+Now, let's use our form. We want it to appear when a user visits the contact page. In Flask terms, we want the form to show up in a web template and map a URL to that web template so we can visit it in the browser. This means we need to create a new web template and a new URL mapping. Let's start by creating a new URL mapping.
+
+This is an action-packed section, and it may be a little confusing. But stick with me and we'll get through it.
+
+As a first step, open routes.py and import our newly created form by adding from forms import ContactForm at the beginning of the script.
+
+app/routes.py
+
+from flask import Flask, render_template
+from forms import ContactForm
+Next, configure Flask-WTF to handle a security exploit known as cross-site request forgery (CSRF). In a perfect world, your server would only process forms that belong to your web app. In other words, your server would only handle and validate the forms that you created. However, it is possible for an attacker to create a form on their own website, fill it in with malicious information, and submit it to your server. If your server accepts this malicious information, all sorts of bad things can happen next.
+
+You can prevent a CSRF attack by making sure that the form submission originates from your web app. One way to do this is to keep a unique token hidden inside your HTML <form> tag that cannot be guessed by attackers. When the form POSTs to your server, the token is checked first. If the token does not match, your server rejects the form submission and does not touch the form data. If the token matches, the server proceeds with form handling and validation.
+
+Flask-WTF does all of this with an easy one-liner. Just configure Flask-WTF with a secret key, and Flask-WTF takes care of generating and managing unique tokens for your forms.
+
+app/routes.py
+
+from flask import Flask, render_template, request
+from forms import ContactForm
+app = Flask(__name__)
+app.secret_key = 'development key'
+
+Here, in line six, I set the secret key to 'development key'. Feel free to make yours more complex, longer, and alphanumeric.
+
+Now that we've imported and configured our contact form, we can use it in a URL mapping in routes.py. Let's go ahead and create that URL mapping.
+
+app/routes.py
+
+@app.route('/contact')
+def contact():
+  form = ContactForm()
+  return render_template('contact.html', form=form)
+
+Now, when someone visits the URL /contact, the function contact() will execute. Inside contact(), we first create a new instance of our contact form in line three and send it to a web template named contact.html in line four. We will create this web template shortly.
+
+We still have some work to do here, though. The diagram above showed that if a GET request is sent to the server, the web page containing the form should be retrieved and loaded in the browser. If the server receives a POST request, a function should capture the form field data and check if it's valid. In Python terms, this logic can be expressed in an if...else statement. There is a Flask class for distinguishing between GET and POST requests, so let's start by importing that class at the beginning of routes.py and adding the if...else logic to the contact() function.
+
+app/routes.py
+
+from flask import Flask, render_template,request
+from forms import ContactForm
+..........
+@app.route('/contact', methods = ['GET','POST'])
+def contact():
+    form = ContactForm()
+    if request.method == 'POST':
+        return 'form posted'
+
+    return render_template('contact.html', form = form)
+We already imported the Flask class and render_template() in the previous article, so here we import one more Flask class named request. request determines whether the current HTTP method is a GET or a POST. Next is the if...else logic to the contact() function (lines 9-13).
+
+In the case of a POST request, a string indicating that the form has been posted will be returned.
+
+This string is a temporary placeholder, and we'll replace it with real code in the final step of this article. Otherwise, if the request uses GET, we return the web template contact.html that contains the form.
+
+The next step is to create the web template contact.html and put it inside the templates/ folder.
+
+app/templates/contact.html
+
+{% extends "layout.html" %}
+{% block content %}
+  <h2>Contact</h2>
+
+  <form action="{{ url_for('contact') }}" method=post>
+    {{ form.hidden_tag() }}
+    {{ form.name.label }}
+    {{ form.name }}
+    {{ form.email.label }}
+    {{ form.email }}
+    {{ form.subject.label }}
+    {{ form.subject }}
+    {{ form.message.label }}
+    {{ form.message }}
+    {{ form.submit }}
+  </form>
+{% endblock %}
+
+As with home.html and about.html, the contact.html template extends layout.html and fills the 'content' block with its own text. We first specify where to send the form data on submission by setting the <form> element's action attribute to the contact() function we created in routes.py (line 5). Next, we let the Jinja2 template engine generate the bulk of the form for us (lines 6-20). We start by inserting a hidden tag in line six to protect against CSRF exploits. Lastly, we add each label and field of the form.
+
+We are now ready to see the result of all our work. Just type the following:
+
+$ python routes.py
+Then go to http://localhost:5000/contact in your favorite web browser.
+
+The contact page containing the form has loaded. Fill in the form fields and click the Send button. You'll see a page that looks like this:
+
+Awesome! Form submission is working.
+
+Let's quickly review everything we did in this section:
+
+We type in the URL http://localhost:5000/contact into the browser's address bar.
+The GET request hits routes.py, where the URL /contact is mapped to the function contact().
+The function contact() executes, where a variable named form containing a usable instance of the ContactForm class is sent to the web template contact.html.
+contact.html generates the contact form's HTML.
+Rendered HTML is sent back to routes.py.
+routes.py sends the HTML back to the browser, and we see the contact page containing the form.
+We fill in the contact form and submit it by clicking the Send button.
+The POST request hits routes.py, where the URL /contact is mapped to the function contact().
+The function contact() executes once more, this time following the if...else control flow for the HTTP POST request.
+The string 'Form posted.' is sent back to the browser, giving us the screen above.
+This is cool, but the contact form looks ugly. Let's make it look better by adding some CSS. Open up main.css and add these rules:
+
+static/css/main.css
+
+/* Contact form */
+form label {
+    font-size: 1.2em;
+    font-weight: bold;
+    display: block;
+    padding: 10px 0;
+  }
+  form input#name,
+  form input#email,
+  form input#subject {
+    width: 400px;
+    background-color: #fafafa;
+    -webkit-border-radius: 3px;
+       -moz-border-radius: 3px;
+            border-radius: 3px;
+    border: 1px solid #cccccc;
+    padding: 5px;
+    font-size: 1.1em;
+  }
+  form textarea#message {
+    width: 500px;
+    height: 100px;
+    background-color: #fafafa;
+    -webkit-border-radius: 3px;
+       -moz-border-radius: 3px;
+            border-radius: 3px;
+    border: 1px solid #cccccc;
+    margin-bottom: 10px;
+    padding: 5px;
+    font-size: 1.1em;
+  }
+  form input#submit {
+    display: block;
+    -webkit-border-radius: 3px;
+       -moz-border-radius: 3px;
+            border-radius: 3px;
+    border:1px solid #d8d8d8;
+    padding: 10px;
+    font-weight:bold;
+    text-align: center;
+    color: #000000;
+    background-color: #f4f4f4;
+    background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #f4f4f4), color-stop(100%, #e5e5e5));
+    background-image: -webkit-linear-gradient(top, #f4f4f4, #e5e5e5);
+    background-image: -moz-linear-gradient(top, #f4f4f4, #e5e5e5);
+    background-image: -ms-linear-gradient(top, #f4f4f4, #e5e5e5);
+    background-image: -o-linear-gradient(top, #f4f4f4, #e5e5e5);
+    background-image: linear-gradient(top, #f4f4f4, #e5e5e5);filter:progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr=#f4f4f4, endColorstr=#e5e5e5);
+  }
+  form input#submit:hover{
+    cursor: pointer;
+    border:1px solid #c1c1c1;
+    background-color: #dbdbdb;
+    background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#dbdbdb), color-stop(100%, #cccccc));
+    background-image: -webkit-linear-gradient(top, #dbdbdb, #cccccc);
+    background-image: -moz-linear-gradient(top, #dbdbdb, #cccccc);
+    background-image: -ms-linear-gradient(top, #dbdbdb, #cccccc);
+    background-image: -o-linear-gradient(top, #dbdbdb, #cccccc);
+    background-image: linear-gradient(top, #dbdbdb, #cccccc);filter:progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr=#dbdbdb, endColorstr=#cccccc);
+  }
+
+Switch back to the browser and refresh http://localhost:5000/contact to see the result of the CSS.
+
+This looks much better. Let's move on to form validation.
+
+Validating Form Data
+A user can now visit the URL /contact and fill in the form. But what happens if the user does not properly fill out the form? We need to validate the user input so that it won't cause problems in later steps.
+
+Form validation is performed by using form validators. Fortunately, Flask-WTF comes with many useful, built-in validators that we can use right away. We'll put these validators in the ContactForm class definition in forms.py.
+
+The most basic validator is presence, which simply ensures that all form fields are filled in, so let's start here.
+
+app/forms.py
+
+from flask_wtf import FlaskForm
+from wtforms import StringField, TextAreaField, SubmitField
+from wtforms.validators import DataRequired
+class ContactForm(FlaskForm):
+  name = StringField("Name",  validators=[DataRequired()])
+  email = StringField("Email",validators = [DataRequired()])
+  subject = StringField("Subject",validators = [DataRequired()])
+  message = TextAreaField("Message",validators = [DataRequired()])
+  submit = SubmitField("Send")
+
+We start by importing the DataRequired built-in validator from wtforms.validators. Next, we add [validators= DataRequired()] to each form field to validate its presence. Notice that this validator is inside a Python list, meaning that we can easily add more validators to this list.
+
+Next, let's require email addresses to match the pattern user@example.com by adding the Email validator to the email field.
+
+The Email() validator requires the email_validator package to be installed, so install it with pip as follows:
+
+pip install email-validator
+Update app/forms.py as follows:
+
+from flask_wtf import FlaskForm
+from wtforms import StringField, TextAreaField, SubmitField
+from wtforms.validators import DataRequired,Email
+class ContactForm(FlaskForm):
+  name = StringField("Name",  validators=[DataRequired()])
+  email = StringField("Email",validators = [DataRequired(),Email()])
+  subject = StringField("Subject",validators = [DataRequired()])
+  message = TextAreaField("Message",validators = [DataRequired()])
+  submit = SubmitField("Send")
+
+That does it for our form validation.
+
+Flashing Error Messages
+Looking back at the original diagram, if any validation check fails, the contact page should reload with an error message so that the user can fix the mistake and try again. This error message must only appear when validation fails and disappear when the mistake has been fixed.
+
+Our next step is to send this sort of temporary error message to the user when validation fails. Flask makes this really easy by using its flash() function. Let's start by opening routes.py and importing Flask's flash() function at the beginning of the script.
+
+app/routes.py
+
+from flask import Flask, render_template, request, flash
+After the contact form POSTs to the server, any validation failure should reload the form with a helpful error message. Otherwise, the input data can be used for future processing. Once again, this logic can be expressed in an if...else statement. Let's add this if...else logic to the contact() function inside the if request.method == 'POST': block.
+
+app/routes.py
+
+@app.route('/contact', methods=['GET', 'POST'])
+def contact():
+  form = ContactForm()
+  if request.method == 'POST':
+    if form.validate() == False:
+      flash('All fields are required.')
+      return render_template('contact.html', form=form)
+    else:
+      return 'Form posted.'
+  elif request.method == 'GET':
+    return render_template('contact.html', form=form)
+
+If any validation check fails, form.validate() will be False. The error message All fields are required will be sent to contact.html. Otherwise, we'll see the temporary placeholder string Form posted, indicating the form has been successfully submitted.
+
+Next, let's modify contact.html so that it can receive and display these temporary error messages. See the following block:
+
+{% for message in get_flashed_messages() %}
+  <div class="flash">{{ message }}</div>
+{% endfor %}
+
+The function get_flashed_messages() pulls all flashed messages and returns them. We then simply display each flashed message by using a Jinja2 for loop. Add this code block to contact.html after <h2>Contact</h2> and before the <form> tag.
+
+app/templates/contact.html
+
+{% extends "layout.html" %}
+{% block content %}
+  <h2>Contact</h2>
+  {% for message in get_flashed_messages() %}
+    <div class="flash">{{ message }}</div>
+  {% endfor %}
+
+  <form action="{{ url_for('contact') }}" method=post>
+    {{ form.hidden_tag() }}
+    {{ form.name.label }}
+    {{ form.name }}
+    {{ form.email.label }}
+    {{ form.email }}
+    {{ form.subject.label }}
+    {{ form.subject }}
+    {{ form.message.label }}
+    {{ form.message }}
+    {{ form.submit }}
+  </form>
+{% endblock %}
+
+Lastly, let's add a CSS rule in main.css so that flashed error messages look pretty.
+
+main.css
+
+/* Message flashing */
+.flash {
+  background-color: #FBB0B0;
+  padding: 10px;
+  width: 400px;
+}
+
+Open your browser and visit http://localhost:5000/contact. Leave all the fields blank and click Send to test whether form validation and error message flashing work.
+
+This is sweet! We have successfully sent an error message to our contact form if a validation check fails.
+
+But we're not done; we can actually do a little better. Instead of having one generic error message for all failed validation checks, it would be better to have a specific error message for each failed validation check. For example, if the user forgets to fill in the subject field, a specific error message that says Please enter a subject would be flashed. Likewise, if the user forgets to fill in their name, we'd flash a specific error message that says Please enter your name. We can accomplish this pretty easily, so let's start by writing our specific error messages inside each validator in forms.py.
+
+app/forms.py
+
+from flask_wtf import FlaskForm
+from wtforms import StringField, TextAreaField, SubmitField
+from wtforms.validators import DataRequired,Email
+class ContactForm(FlaskForm):
+  name = StringField("Name",  validators=[DataRequired(message ="Please enter your name.")])
+  email = StringField("Email",validators = [DataRequired(message = "Please enter your email address"),Email()])
+  subject = StringField("Subject",validators = [DataRequired(message = "Please enter a subject.")])
+  message = TextAreaField("Message",validators = [DataRequired(message = "Please enter a message.")])
+  submit = SubmitField("Send")
+We simply write specific error messages inside each validator. Next, let's modify contact.html to receive and display these specific error messages. Earlier, we relied on the function get_flashed_messages() to pull flashed error messages, and looped over them to display them. Let's replace that block with this one:
+
+{% for message in form.name.errors %}
+  <div class="flash">{{ message }}</div>
+{% endfor %}
+{% for message in form.email.errors %}
+  <div class="flash">{{ message }}</div>
+{% endfor %}
+{% for message in form.subject.errors %}
+  <div class="flash">{{ message }}</div>
+{% endfor %}
+{% for message in form.message.errors %}
+  <div class="flash">{{ message }}</div>
+{% endfor %}
+
+Here we use the errors attribute for each form field to pull the specific error messages and loop over them using the Jinja2 for loop to display them.
+
+Putting it all together, contact.html now looks like this:
+
+app/templates/contact.html
+
+{% extends "layout.html" %}
+{% block content %}
+  <h2>Contact</h2>
+  {% for message in form.name.errors %}
+    <div class="flash">{{ message }}</div>
+  {% endfor %}
+  {% for message in form.email.errors %}
+    <div class="flash">{{ message }}</div>
+  {% endfor %}
+  {% for message in form.subject.errors %}
+    <div class="flash">{{ message }}</div>
+  {% endfor %}
+  {% for message in form.message.errors %}
+    <div class="flash">{{ message }}</div>
+  {% endfor %}
+
+  <form action="{{ url_for('contact') }}" method=post>
+    {{ form.hidden_tag() }}
+    {{ form.name.label }}
+    {{ form.name }}
+    {{ form.email.label }}
+    {{ form.email }}
+    {{ form.subject.label }}
+    {{ form.subject }}
+    {{ form.message.label }}
+    {{ form.message }}
+    {{ form.submit }}
+  </form>
+{% endblock %}
+
+Switch back to the browser, go to http://localhost:5000/contact, and click Send. Be sure to leave all form fields blank.
+
+Perfect! The form now provides helpful error messages if the user makes a mistake.
+
+We accomplished a lot in this section. We created a contact form from scratch, learned how to protect against CSRF attacks, distinguished between GET and POST requests, enforced form validation, and flashed specific error messages if necessary. We now need to email the message.
+
+Flask-Mail
+Flask-Mail is a Flask extension that enables you to send emails from your Flask app. The steps below are similar to those we took to use Flask-WTF.
+
+Let's start by installing Flask-Mail.
+
+$ pip install Flask-Mail
+
+Advertisement
+Configuring Flask-Mail
+Next, let's import Flask-Mail into routes.py and configure it so that we can start using it.
+
+app/routes.py
+
+from flask import Flask, render_template,request,flash
+from forms import ContactForm
+from flask_mail import Mail, Message
+app  = Flask(__name__)
+app.secret_key = 'my_secrest_key'
+mail = Mail()
+app.config["MAIL_SERVER"] = "smtp.gmail.com"
+app.config["MAIL_PORT"] = 465
+app.config["MAIL_USE_SSL"] = True
+app.config["MAIL_USERNAME"] = 'contact@example.com'
+app.config["MAIL_PASSWORD"] = 'your-password'
+mail.init_app(app)
+First, we import the Message and Mail classes from Flask-Mail (line three). We'll use the Message class to compose a new email and the Mail class to send the email. Next, we create the mail variable that contains a usable instance of the Mail class (line five).
+
+We then configure Flask-Mail with a few SMTP server settings (lines 11-15). I used Gmail's SMTP server settings here, but you can easily use your favorite email provider. Just search for its SMTP settings and you'll be set. For example, if you want to use Yahoo! Mail, just search for "yahoo mail smtp server settings" and update the configuration.
+
+Make sure to enter a real email and password in app.config["MAIL_USERNAME"] and app.config["MAIL_PASSWORD"], respectively. This will be the account from which you'll send email.
+
+Finally, we attach mail to our Flask app so that we can start using it (line 17).
+
+You've probably seen groups use contact email addresses like contact@example.com or support@example.com. If you own your own domain and can create a new contact email address, go ahead and put that email address in app.config["MAIL_USERNAME"]. Otherwise, you can use your personal email address just to see how this works.
+
+Sending an Email
+Now that the configuration is complete, let's compose a new email containing the contact form data and send it. We should only send an email if the form has been submitted and all validation checks pass. This means we need to work inside the if request.method == 'POST': block again. We've already added logic inside the if form.validate() == False: block to handle validation failures. If all validation checks pass, form.validate() will be True and the program will enter the else block. Therefore, let's go ahead and add logic inside the else: block.
+
+app/routes.py
+
+@app.route('/contact', methods=['GET', 'POST'])
+def contact():
+  form = ContactForm()
+  if request.method == 'POST':
+    if form.validate() == False:
+      flash('All fields are required.')
+      return render_template('contact.html', form=form)
+    else:
+      msg = Message(form.subject.data, sender='contact@example.com', recipients=['your_email@example.com'])
+      msg.body = """
+From: %s <%s>
+%s
+""" % (form.name.data, form.email.data, form.message.data)
+      mail.send(msg)
+      return 'Form posted.'
+  elif request.method == 'GET':
+    return render_template('contact.html', form=form)
+We start by composing a new message (line 10). The Message class takes a subject line, a "from" address, and a "to" address. We then collect the contact form's subject field data with form.subject.data and set it as the new message's subject line. The email will be sent from the account you configured in app.config["MAIL_USERNAME"], so that's what we used here for the from address. The email will be sent to your personal email address so that you can receive and respond to new messages.
+
+Next, we write the email itself (lines 11-14). We include the user's name, email, and message. I use Python's string formatting operator % to format the email. And finally, we use mail.send(msg) to send the email (line 15).
+
+Let's see if everything works. Visit http://localhost:5000/contact, fill out each field, and click "Send." If all goes well, you'll receive a new email from your Flask app.
+
+Tidying Up
+Our penultimate step is to remove the temporary placeholder string 'Form posted.' with a message thanking the user for their feedback. This message should only appear if our application sends the email. Once again, this logic can be expressed in an if...else statement.
+
+When the contact form has been successfully submitted, we'll send a success flag from routes.py to contact.html.
+
+We'll place the if...else logic inside contact.html. If the success flag is set to True, we'll display the thank you message. Otherwise, we'll display the contact form.
+
+Let's start in routes.py inside the contact() function. Replace the temporary placeholder line return 'Form posted.' with return render_template('contact.html', success=True) in order to send a success flag to contact.html. The contact() function now looks like this:
+
+app/routes.py
+
+@app.route('/contact', methods=['GET', 'POST'])
+def contact():
+  form = ContactForm()
+  if request.method == 'POST':
+    if form.validate() == False:
+      flash('All fields are required.')
+      return render_template('contact.html', form=form)
+    else:
+      msg = Message(form.subject.data, sender='contact@example.com', recipients=['your_email@example.com'])
+      msg.body = """
+From: %s &lt;%s&gt;
+%s
+""" % (form.name.data, form.email.data, form.message.data)
+      mail.send(msg)
+      return render_template('contact.html', success=True)
+  elif request.method == 'GET':
+    return render_template('contact.html', form=form)
+
+Next, open contact.html and add the if...else logic. We'll use Jinja2's if...else syntax to make this happen.
+
+app/templates/contact.html
+
+{% extends "layout.html" %}
+{% block content %}
+  <h2>Contact</h2>
+  {% if success %}
+    <p>Thank you for your message. We'll get back to you shortly.</p>
+  {% else %}
+    {% for message in form.name.errors %}
+      <div class="flash">{{ message }}</div>
+    {% endfor %}
+    {% for message in form.email.errors %}
+      <div class="flash">{{ message }}</div>
+    {% endfor %}
+    {% for message in form.subject.errors %}
+      <div class="flash">{{ message }}</div>
+    {% endfor %}
+    {% for message in form.message.errors %}
+      <div class="flash">{{ message }}</div>
+    {% endfor %}
+    <form action="{{ url_for('contact') }}" method=post>
+      {{ form.hidden_tag() }}
+      {{ form.name.label }}
+      {{ form.name }}
+      {{ form.email.label }}
+      {{ form.email }}
+      {{ form.subject.label }}
+      {{ form.subject }}
+      {{ form.message.label }}
+      {{ form.message }}
+      {{ form.submit }}
+    </form>
+  {% endif %}
+{% endblock %}
+
+Starting in line 6, {% if success %} means that if the success flag we sent from routes.py is set to True, then display <p>Thank you for your message. We'll get back to you shortly.</p>. Otherwise, follow the {% else %} branch and display the contact form. Jinja2 syntax asks that we close the if...else statement with {% endif %}, so we include that at the end (line 45).
+
+Finally, let's visit http://localhost:5000/contact one more time. Fill in each field and click Send.
+
+Our last step is to add a navigation link to the contact page. In the previous article, we added these links to layout.html inside the <header> element. Let's also do that for the contact page (line eight).
+
+app/templates/layout.html
+
+   <header>
+        <div class="container">
+          <h1 class="logo">Flask App</h1>
+          <strong><nav>
+            <ul class="menu">
+              <li><a href="{{ url_for('home') }}">Home</a></li>
+              <li><a href="{{ url_for('about') }}">About</a></li>
+              li><a href="{{ url_for('contact') }}">Contact</a></li>
+            </ul>
+          </nav></strong>
+        </div>
+      </header>
+
+Open up the browser and refresh http://localhost:5000/ to see the newly added navigation link.
+
+
+Advertisement
+Conclusion
+In this article, we added a contact page containing a form to our Flask app. Forms appear in several places in web applications, most notably during signup and login. This workflow can be adapted to meet those needs. In creating a contact page, we learned how to use Flask extensions.
+
+Flask extensions are simple, powerful tools that extend the functionality of your Flask-based app.
+
+Check out the Flask Extension Registry to explore many more extensions that you can integrate into your app.
+
+
+Advertisement
+Did you find this post useful?
+ Yes
+ No
+Want a weekly email summary?
+Subscribe below and we’ll send you a weekly email summary of all new Code tutorials. Never miss out on learning about the next big thing.
+Sign up
+Lalith Polepeddi
+Lalith Polepeddi
+N/A
+View on GitHub
+
+Advertisement
+QUICK LINKSExplore popular categories
+ENVATO TUTS+
+About Envato Tuts+
+Terms of Use
+Advertise
+HELP
+FAQ
+Help Center
+envato-tuts+
+30,252
+Tutorials
+553
+Courses
+42,531
+Translations
+B Corp logo
+EnvatoEnvato ElementsEnvato MarketPlaceit by EnvatoAll productsCareersSitemap
+© 2023 Envato Pty Ltd. Trademarks and brands are the property of their respective owners.
+YoutubeInstagramTiktokFacebookTwitterPinterest
+

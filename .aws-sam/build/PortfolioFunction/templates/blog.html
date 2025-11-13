@@ -1,0 +1,76 @@
+{% extends "base.html" %} {% block extra_head %}
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/blog.css') }}"
+/>
+{% endblock %} {% block content %}
+<div class="blog-page">
+  <div class="blog-container">
+    <div class="feature-list">
+      <section class="feature">
+        <div class="feature__content">
+          <h2>Story</h2>
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi id
+            ante sed ex pharetra lacinia sit amet vel massa.
+          </p>
+          <div class="feature__actions">
+            <a href="#" class="feature__button">Learn More</a>
+          </div>
+        </div>
+        <div class="feature__image">
+          <img src="/static/images/shooting star.jpg" alt="shooting star" />
+        </div>
+      </section>
+
+      <section class="feature feature--right">
+        <div class="feature__content">
+          <h2>Free time</h2>
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi id
+            ante sed ex pharetra lacinia sit amet vel massa.
+          </p>
+          <div class="feature__actions">
+            <a href="#" class="feature__button">Learn More</a>
+          </div>
+        </div>
+        <div class="feature__image">
+          <img src="/static/images/sakura.jpg" alt="sakura" />
+        </div>
+      </section>
+
+      <section class="feature">
+        <div class="feature__content">
+          <h2>Learning</h2>
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi id
+            ante sed ex pharetra lacinia sit amet vel massa.
+          </p>
+          <div class="feature__actions">
+            <a href="#" class="feature__button">Learn More</a>
+          </div>
+        </div>
+        <div class="feature__image">
+          <img src="/static/images/cliff road.jpg" alt="cliff road" />
+        </div>
+      </section>
+
+      <section class="feature feature--right">
+        <div class="feature__content">
+          <h2>Inspiration</h2>
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi id
+            ante sed ex pharetra lacinia sit amet vel massa.
+          </p>
+          <div class="feature__actions">
+            <a href="#" class="feature__button">Learn More</a>
+          </div>
+        </div>
+        <div class="feature__image">
+          <img src="/static/images/summer.jpg" alt="summer" />
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+{% endblock %}

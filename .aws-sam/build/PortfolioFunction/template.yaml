@@ -1,0 +1,40 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Description: Serverless deployment for my-own-portfolio Flask app.
+
+Globals:
+  Function:
+    Timeout: 10
+    MemorySize: 512
+    Runtime: python3.11
+    Environment:
+      Variables:
+        FLASK_ENV: production
+    Tracing: Active
+
+Resources:
+  PortfolioFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: my-own-portfolio
+      Handler: lambda_handler.handler
+      CodeUri: .
+      Description: Flask portfolio rendered through AWS Lambda and API Gateway.
+      Policies:
+        - AWSLambdaBasicExecutionRole
+      Events:
+        RootPath:
+          Type: HttpApi
+          Properties:
+            Path: /
+            Method: ANY
+        ProxyPath:
+          Type: HttpApi
+          Properties:
+            Path: /{proxy+}
+            Method: ANY
+
+Outputs:
+  PortfolioApiUrl:
+    Description: Invoke URL for the deployed API Gateway endpoint.
+    Value: !Sub "https://${ServerlessHttpApi}.execute-api.${AWS::Region}.amazonaws.com"
